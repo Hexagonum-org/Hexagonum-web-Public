@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Hexagonum - the Future</title>
+  <meta name="description" content="Hexagonum is a studio that designs, builds and launches its own apps, one cassette at a time.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <!-- Shared SVG Symbols & Gradients -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="mg" gradientUnits="userSpaceOnUse" x1="27" y1="72" x2="73" y2="30">
+        <stop offset="0" stop-color="#C026D3" />
+        <stop offset="0.5" stop-color="#7C3AED" />
+        <stop offset="1" stop-color="#2563EB" />
+      </linearGradient>
+      <linearGradient id="cg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#7C3AED" />
+        <stop offset="1" stop-color="#2563EB" />
+      </linearGradient>
+      <symbol id="bp-icon" viewBox="0 0 100 100">
+        <rect width="100" height="100" rx="22" fill="#0A58FF" />
+        <g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="21" y="21" width="58" height="58" rx="9" />
+          <path d="M43 21V79M43 46H79" />
+        </g>
+      </symbol>
+      <symbol id="mark" viewBox="0 0 100 100">
+        <path d="M50 4 L89.8 27 V73 L50 96 L10.2 73 V27 Z" style="fill:var(--mark-hex);stroke:var(--mark-hex)"
+          stroke-width="8" stroke-linejoin="round" />
+        <rect x="27" y="33" width="22" height="9" rx="4.5" fill="url(#mg)" />
+        <rect x="27" y="47" width="32" height="9" rx="4.5" fill="url(#mg)" />
+        <rect x="27" y="61" width="46" height="9" rx="4.5" fill="url(#mg)" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- Intro -->
+  <div class="intro" id="intro">
+    <div class="bob">
+      <button class="cassette-btn" id="cassette" type="button"
+        aria-label="Insert the cassette to enter the Hexagonum website"></button>
+    </div>
+    <p class="intro-hint">Click the cassette to enter</p>
+    <button class="skip" id="skip" type="button">Skip intro</button>
+  </div>
+
+  <!-- Home Content -->
+  <div id="home">
+    <nav class="nav" aria-label="Main">
+      <a class="brand" href="#top" data-go="top" aria-label="Hexagonum, back to top">
+        <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+          <use href="#mark" />
+        </svg>
+        <span>Hexagonum</span>
+      </a>
+      <a href="#about" data-go="about">About</a>
+      <a href="#apps" data-go="apps">Apps</a>
+      <a href="#contact" data-go="contact">Contact</a>
+    </nav>
+
+    <header class="hero" id="top">
+      <div class="wrap">
+        <div class="card hero-card">
+          <div class="hero-text">
+            <span class="label">Studio · Own apps</span>
+            <h1>The future of <em>creativity.</em></h1>
+            <p class="hero-sub">Hexagonum is a studio that designs, builds and launches its own apps, one cassette at a
+              time.</p>
+            <div class="cta">
+              <a class="btn btn-primary" href="#apps" data-go="apps">See our apps</a>
+              <a class="btn btn-ghost" href="#about" data-go="about">About us ›</a>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="blob"></div>
+            <div class="hero-tape" id="hero-tape"></div>
+            <a class="chip-card chip-a" href="blueprint-v3.html" tabindex="-1">
+              <span class="go">↗</span>
+              <span><b>Blueprintv3</b><span class="s">Our current app</span></span>
+            </a>
+            <div class="chip-card chip-b">
+              <span><b>the future is here</b><span class="s">we are something special</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- About Section -->
+      <section class="about-pin" id="about">
+        <div class="snap-mark" style="--i:0"></div>
+        <div class="snap-mark" style="--i:1"></div>
+        <div class="snap-mark" style="--i:2"></div>
+        <div class="snap-mark" style="--i:3"></div>
+        <div class="snap-mark" style="--i:4"></div>
+        <div class="snap-mark" style="--i:5"></div>
+        <div class="about-sticky">
+          <div class="wrap">
+            <div class="card about-card">
+              <div class="about-copy">
+                <span class="label">About</span>
+                <h2>A studio, not an agency.</h2>
+                <p>We are a small two man operation. We come up with an app, design it, build it and release it
+                  ourselves. Every app gets its own look, its own page and its own cassette. We are looking for
+                  something new, something special.</p>
+                <p>A hexagon has six sides, and so does the way we work.</p>
+                <p class="label scroll-hint">Scroll to move through the six steps ↓</p>
+              </div>
+              <div class="arc" id="arc">
+                <svg viewBox="0 0 220 420" role="group" aria-label="Six steps of our process" id="arc-svg"></svg>
+                <div class="step-read" aria-live="polite">
+                  <div class="big" id="step-num">01</div>
+                  <h3 id="step-title"></h3>
+                  <p id="step-text"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Apps Section -->
+      <section class="snap" id="apps">
+        <div class="wrap">
+          <div class="apps-head">
+            <h2>Our apps.</h2>
+            <p>Scroll to pull a tape out. Click it to open the app.</p>
+          </div>
+          <div class="card stage">
+            <div class="rail" id="rail" tabindex="0" aria-label="Cassette carousel of Hexagonum apps"></div>
+            <div class="caption">
+              <div>
+                <div class="label" id="cap-kind">App</div>
+                <div class="name" id="cap-name"></div>
+              </div>
+              <div class="arrows">
+                <button type="button" id="prev" aria-label="Previous cassette">←</button>
+                <button type="button" id="next" aria-label="Next cassette">→</button>
+              </div>
+              <button class="open-btn" type="button" id="open">Open</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section class="snap" id="contact">
+        <div class="wrap">
+          <div class="card contact-card">
+            <svg class="rings" viewBox="0 0 100 100" aria-hidden="true" fill="none" stroke="url(#cg)"
+              stroke-linejoin="round">
+              <polygon points="50,4 89.8,27 89.8,73 50,96 10.2,73 10.2,27" stroke-width="0.8" />
+              <polygon points="50,16 79.4,33 79.4,67 50,84 20.6,67 20.6,33" stroke-width="0.6"
+                stroke-opacity="0.7" />
+              <polygon points="50,28 69,39 69,61 50,72 31,61 31,39" stroke-width="0.5" stroke-opacity="0.5" />
+            </svg>
+            <div class="contact-inner">
+              <span class="label">Contact</span>
+              <h2>Say hi.</h2>
+              <p class="sub">Feedback, ideas or just hello. Write to us by email or find us on Discord.</p>
+              <div class="rows">
+                <div class="row">
+                  <div><span class="label">Email</span><span class="val" id="v-email">cooming soon</span></div>
+                  <button class="copy" type="button" data-target="v-email">Copy</button>
+                </div>
+                <div class="row">
+                  <div><span class="label">Discord</span><span class="val" id="v-discord">coming soon</span></div>
+                  <button class="copy" type="button" data-target="v-discord">Copy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="wrap foot">
+          <span class="b">
+            <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+              <use href="#mark" />
+            </svg>
+            Hexagonum
+          </span>
+          <span>© 2026 Hexagonum</span>
+          <button type="button" id="replay">Replay intro</button>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Hexagonum - the Future</title>
+  <meta name="description"
+    content="Blueprintv3 (Project-3) - Developed by KVX-Dev and Hexagonum. After 2 attempts, we are finally launching Project 3. Open source on GitHub.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="app"
+  style="--a-bg:#0A3BC4;--a-ink:#FFFFFF;--a-muted:#B9CBFF;--a-line:rgba(255,255,255,0.35);--a-grid:rgba(255,255,255,0.09);--a-soft:rgba(255,255,255,0.07);">
+
+  <!-- Shared SVG Symbols & Gradients -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="mg" gradientUnits="userSpaceOnUse" x1="27" y1="72" x2="73" y2="30">
+        <stop offset="0" stop-color="#C026D3" />
+        <stop offset="0.5" stop-color="#7C3AED" />
+        <stop offset="1" stop-color="#2563EB" />
+      </linearGradient>
+      <linearGradient id="cg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#7C3AED" />
+        <stop offset="1" stop-color="#2563EB" />
+      </linearGradient>
+      <symbol id="bp-icon" viewBox="0 0 100 100">
+        <rect width="100" height="100" rx="22" fill="#0A58FF" />
+        <g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="21" y="21" width="58" height="58" rx="9" />
+          <path d="M43 21V79M43 46H79" />
+        </g>
+      </symbol>
+      <symbol id="github-icon" viewBox="0 0 24 24">
+        <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"
+          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+      </symbol>
+      <symbol id="mark" viewBox="0 0 100 100">
+        <path d="M50 4 L89.8 27 V73 L50 96 L10.2 73 V27 Z" style="fill:var(--mark-hex);stroke:var(--mark-hex)"
+          stroke-width="8" stroke-linejoin="round" />
+        <rect x="27" y="33" width="22" height="9" rx="4.5" fill="url(#mg)" />
+        <rect x="27" y="47" width="32" height="9" rx="4.5" fill="url(#mg)" />
+        <rect x="27" y="61" width="46" height="9" rx="4.5" fill="url(#mg)" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="app-inner">
+    <!-- Top Bar -->
+    <header class="app-top mono">
+      <a href="index.html#apps" id="back">← Hexagonum</a>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span>App / Blueprintv3 · Project-3</span>
+        <a href="https://github.com/KVX-Dev/Project-3" target="_blank" rel="noopener noreferrer"
+          aria-label="View Project-3 on GitHub" style="padding:6px 12px;font-size:0.75rem;">
+          <svg width="15" height="15" viewBox="0 0 24 24" style="fill:currentColor">
+            <use href="#github-icon" />
+          </svg>
+          GitHub ↗
+        </a>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="app-hero">
+      <div>
+        <div class="app-badge">
+          <span class="pulse"></span>
+          <span>v0.1.3 Stable · KVX-Dev / Project-3</span>
+        </div>
+        <svg viewBox="0 0 100 100" width="84" height="84"
+          style="display:block;margin-bottom:20px;border-radius:22px;box-shadow:0 18px 30px -12px rgba(0,0,0,0.45)"
+          aria-hidden="true">
+          <use href="#bp-icon" />
+        </svg>
+        <h1>Blueprintv3</h1>
+        <p>After two attempts, Project 3 is finally launching. A precision layout & visual architecture suite by
+          <strong>KVX-Dev</strong> and the <strong>Hexagonum</strong> studio team, packaging creative software
+          components into modular virtual cassettes.</p>
+
+        <div class="app-cta">
+          <a href="https://github.com/KVX-Dev/Project-3" target="_blank" rel="noopener noreferrer"
+            class="btn-github">
+            <svg viewBox="0 0 24 24">
+              <use href="#github-icon" />
+            </svg>
+            <span>View on GitHub</span>
+            <span style="font-size:0.75rem;padding:2px 7px;background:rgba(6,35,110,0.1);border-radius:999px;">★
+              Star</span>
+          </a>
+          <a href="#features" class="btn-blueprint-ghost">Explore Features ↓</a>
+        </div>
+
+        <div class="code-pill">
+          <span style="color:rgba(255,255,255,0.4)">$</span>
+          <code id="clone-text">git clone https://github.com/KVX-Dev/Project-3.git</code>
+          <button type="button" id="copy-btn">Copy</button>
+        </div>
+      </div>
+
+      <div class="app-tape">
+        <svg viewBox="0 0 420 270" aria-hidden="true">
+          <rect x="20" y="20" width="380" height="230" rx="26" fill="#0A58FF" />
+          <rect x="44" y="40" width="332" height="100" rx="14" fill="#FFFFFF" />
+          <text class="cas-small" x="360" y="62" text-anchor="end" fill="#06236E" fill-opacity="0.6">SIDE A · C90</text>
+          <use href="#bp-icon" x="58" y="64" width="52" height="52" />
+          <text class="cas-name" x="126" y="98" font-size="27" fill="#06236E" textLength="226"
+            lengthAdjust="spacing">BLUEPRINTV3</text>
+          <rect x="126" y="110" width="234" height="4" rx="2" fill="#0A58FF" />
+          <rect x="120" y="152" width="180" height="52" rx="26" fill="#05247A" />
+          <line x1="170" y1="196" x2="250" y2="196" stroke="#05247A" stroke-width="2" />
+          <g transform="translate(150 178)">
+            <g class="reel">
+              <circle r="20" fill="#E8EEFF" />
+              <circle r="12" fill="#05247A" />
+              <g fill="#E8EEFF">
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(0)" />
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(60)" />
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(120)" />
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(180)" />
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(240)" />
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(300)" />
+              </g>
+            </g>
+          </g>
+          <g transform="translate(270 178)">
+            <g class="reel">
+              <circle r="20" fill="#E8EEFF" />
+              <circle r="12" fill="#05247A" />
+              <g fill="#E8EEFF">
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(0)" />
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(60)" />
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(120)" />
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(180)" />
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(240)" />
+                <rect x="-1.5" y="-12" width="3" height="5" transform="rotate(300)" />
+              </g>
+            </g>
+          </g>
+          <path d="M104 250 L128 216 H292 L316 250 Z" fill="#0846CC" />
+          <circle cx="150" cy="236" r="5" fill="#05247A" />
+          <circle cx="270" cy="236" r="5" fill="#05247A" />
+          <circle cx="34" cy="34" r="4" fill="#05247A" />
+          <circle cx="386" cy="34" r="4" fill="#05247A" />
+          <circle cx="34" cy="236" r="4" fill="#05247A" />
+          <circle cx="386" cy="236" r="4" fill="#05247A" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- Technical Specs -->
+    <div class="facts mono">
+      <div class="fact">
+        <span>Repository</span>
+        <span>KVX-Dev/Project-3</span>
+      </div>
+      <div class="fact">
+        <span>Developer</span>
+        <span>KVX-Dev &amp; Hexagonum</span>
+      </div>
+      <div class="fact">
+        <span>Version</span>
+        <span>v0.1.3 Stable</span>
+      </div>
+      <div class="fact">
+        <span>Type</span>
+        <span>App &amp; Layout Engine</span>
+      </div>
+      <div class="fact">
+        <span>License</span>
+        <span>Open Source</span>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <section id="features" style="display:flex;flex-direction:column;gap:20px;">
+      <div>
+        <span class="mono" style="color:var(--a-muted)">Project-3 Milestone</span>
+        <h2 style="font-family:var(--font);font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-0.04em;margin-top:6px;">
+          After 2 attempts, we are finally launching.
+        </h2>
+        <p style="color:var(--a-muted);max-width:54ch;font-size:1rem;margin-top:8px;">
+          Project 3 is the culmination of extensive experimentation. Rebuilt from the ground up for maximum reliability, speed, and creative clarity.
+        </p>
+      </div>
+
+      <div class="blueprint-grid-features">
+        <div class="feature-card">
+          <span class="feature-num">01 / EVOLUTION</span>
+          <h3>Third-Generation Core</h3>
+          <p>Iterated through two previous prototypes to eliminate bloat. Project 3 features an ultra-lean architecture designed for immediate feedback and durability.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-num">02 / CASSETTES</span>
+          <h3>Cassette State Packaging</h3>
+          <p>Package entire projects, layout blueprints, and themes into virtual cassettes that can be saved, hot-swapped, and shared across environments.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-num">03 / PRECISION</span>
+          <h3>Vector Grid Engine</h3>
+          <p>Pixel-perfect snapping with customized isometric and hexagonal layout planes designed specifically for the Hexagonum ecosystem.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-num">04 / OPEN SOURCE</span>
+          <h3>Developed in the Open</h3>
+          <p>Directly hosted on GitHub by KVX-Dev. Clean code, semantic structure, zero proprietary lock-in, and full transparency.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code / Configuration Showcase -->
+    <section class="code-window">
+      <div class="code-window-bar mono">
+        <div class="code-window-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <span>blueprint.config.json</span>
+        <span style="opacity:0.6;">UTF-8</span>
+      </div>
+      <pre><code>{
+  <span style="color:#B9CBFF">"name"</span>: <span style="color:#7C3AED">"Project-3"</span>,
+  <span style="color:#B9CBFF">"alias"</span>: <span style="color:#7C3AED">"Blueprintv3"</span>,
+  <span style="color:#B9CBFF">"version"</span>: <span style="color:#7C3AED">"0.1.3"</span>,
+  <span style="color:#B9CBFF">"author"</span>: <span style="color:#7C3AED">"KVX-Dev"</span>,
+  <span style="color:#B9CBFF">"studio"</span>: <span style="color:#7C3AED">"Hexagonum"</span>,
+  <span style="color:#B9CBFF">"repository"</span>: <span style="color:#7C3AED">"https://github.com/KVX-Dev/Project-3"</span>,
+  <span style="color:#B9CBFF">"cassette"</span>: {
+    <span style="color:#B9CBFF">"tape"</span>: <span style="color:#7C3AED">"C90"</span>,
+    <span style="color:#B9CBFF">"theme"</span>: <span style="color:#7C3AED">"blueprint-azure"</span>,
+    <span style="color:#B9CBFF">"grid"</span>: <span style="color:#F59E0B">32</span>,
+    <span style="color:#B9CBFF">"status"</span>: <span style="color:#22C55E">"launched"</span>
+  },
+  <span style="color:#B9CBFF">"license"</span>: <span style="color:#7C3AED">"Open Source"</span>
+}</code></pre>
+    </section>
+
+    <!-- GitHub Integration Card -->
+    <section class="github-card">
+      <div class="github-card-info">
+        <span class="mono" style="color:var(--a-muted)">GitHub Repository · KVX-Dev/Project-3</span>
+        <h2>Explore Project-3 on GitHub</h2>
+        <p>After 2 attempts, we are finally launching Project 3. Clone the repo, view the source code, open issues, or star the project on GitHub.</p>
+      </div>
+      <div class="github-card-actions">
+        <a href="https://github.com/KVX-Dev/Project-3" target="_blank" rel="noopener noreferrer" class="btn-github">
+          <svg viewBox="0 0 24 24">
+            <use href="#github-icon" />
+          </svg>
+          <span>Open KVX-Dev/Project-3</span>
+        </a>
+        <a href="https://github.com/KVX-Dev/Project-3/issues" target="_blank" rel="noopener noreferrer"
+          class="btn-blueprint-ghost">
+          Issues &amp; Discussions ↗
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-foot mono">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <svg class="mark" viewBox="0 0 100 100" aria-hidden="true" style="width:20px;height:20px;--mark-hex:#FFFFFF;">
+          <use href="#mark" />
+        </svg>
+        <span>Hexagonum · KVX-Dev / Project-3</span>
+      </div>
+      <div>
+        <a href="index.html#apps">Return to Studio</a> &nbsp;·&nbsp;
+        <a href="https://github.com/KVX-Dev/Project-3" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/KVX-Dev" target="_blank" rel="noopener noreferrer">@KVX-Dev</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Copy clone command
+    var copyBtn = document.getElementById('copy-btn');
+    var cloneText = document.getElementById('clone-text');
+    if (copyBtn && cloneText) {
+      copyBtn.addEventListener('click', function () {
+        navigator.clipboard.writeText(cloneText.textContent).then(function () {
+          copyBtn.textContent = 'Copied!';
+          setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1600);
+        }).catch(function () {
+          copyBtn.textContent = 'Copied!';
+          setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1600);
+        });
+      });
+    }
+  </script>
+</body>
+
+</html>
