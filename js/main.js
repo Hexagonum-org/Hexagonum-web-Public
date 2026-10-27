@@ -120,6 +120,25 @@
   var heroTape = document.getElementById('hero-tape');
   if (heroTape) heroTape.innerHTML = cassette('Hexagonum', HEX);
 
+  // Full Cassettes that hover out on rack hover (Image 1 Inspo)
+  var popoutNotebook = document.getElementById('popout-notebook');
+  if (popoutNotebook) popoutNotebook.innerHTML = cassette('myNotebook', NOTEBOOK_CAS, 'SIDE A · IDEAS');
+
+  var popoutHex = document.getElementById('popout-hex');
+  if (popoutHex) popoutHex.innerHTML = cassette('Hexagonum', HEX);
+
+  var popoutCh2 = document.getElementById('popout-ch2');
+  if (popoutCh2) popoutCh2.innerHTML = cassette('Chapter 02', {
+    body: '#1E293B', label: '#0F172A', ink: '#E2E8F0', dark: '#0284C7',
+    reel: '#F1F5F9', base: '#0F172A', stripe: '#06B6D4', mark: null
+  }, 'SIDE A · SOON');
+
+  var popoutCh3 = document.getElementById('popout-ch3');
+  if (popoutCh3) popoutCh3.innerHTML = cassette('Chapter 03', {
+    body: '#292524', label: '#1C1917', ink: '#F5F5F4', dark: '#D97706',
+    reel: '#F5F5F4', base: '#1C1917', stripe: '#F59E0B', mark: null
+  }, 'SIDE B · SOON');
+
   /* ---------- Intro Logic ---------- */
   var busy = false, timers = [], ctx = null;
   document.body.classList.add('locked');
@@ -212,30 +231,22 @@
     });
   }
 
-  // Blueprintv3 Tape Click
-  if (cassetteBpBtn) {
-    cassetteBpBtn.addEventListener('click', function () {
-      if (busy || !intro) return;
-      busy = true;
-      cassetteBpBtn.classList.add('ejecting');
-      intro.classList.add('play');
-      click(0.6);
-      later(function () {
-        window.location.href = 'blueprint-v3.html';
-      }, 480);
+  var cassetteCh2Btn = document.getElementById('cassette-ch2');
+  var cassetteCh3Btn = document.getElementById('cassette-ch3');
+
+  function handleComingSoon(btn) {
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      click(0.35);
+      btn.style.transform = 'translateX(95px) scale(0.98)';
+      setTimeout(function () {
+        btn.style.transform = '';
+      }, 280);
     });
   }
 
-  // Blank/Coming Soon Tape
-  if (cassetteBlankBtn) {
-    cassetteBlankBtn.addEventListener('click', function () {
-      click(0.3);
-      cassetteBlankBtn.style.transform = 'translateX(18px)';
-      setTimeout(function () {
-        cassetteBlankBtn.style.transform = '';
-      }, 250);
-    });
-  }
+  handleComingSoon(cassetteCh2Btn);
+  handleComingSoon(cassetteCh3Btn);
 
   var skipBtn = document.getElementById('skip');
   if (skipBtn) {

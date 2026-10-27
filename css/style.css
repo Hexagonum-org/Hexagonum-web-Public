@@ -434,13 +434,54 @@ button {
 .tape-blank .tape-date,
 .tape-blank .tape-side { color: #9CA3AF; }
 
-/* HOVER EFFECT: Tape pulls out of the rack! */
+/* Chapter / Coming Soon Tapes */
+.tape-chapter .tape-spine-body {
+  background: #202330;
+  border-left: 5px solid #4F46E5;
+}
+.tape-chapter .tape-title { color: #F3F4F6; }
+.tape-chapter .tape-tag { color: #A5B4FC; }
+.tape-chapter .tape-date { color: #9CA3AF; }
+.tape-chapter .tape-side { color: #9CA3AF; }
+
+.tape-hazard-cyan {
+  background: repeating-linear-gradient(
+    -45deg,
+    #06B6D4,
+    #06B6D4 6px,
+    #181922 6px,
+    #181922 12px
+  ) !important;
+}
+
+.soon-badge {
+  background: #2E3346 !important;
+  color: #FCD34D !important;
+  font-size: 0.54rem !important;
+  letter-spacing: 0.08em !important;
+  padding: 3px 6px !important;
+}
+
+/* HOVER EFFECT: Tape pulls FAR out of the rack and HOVERS (schwebt)! */
 .rack-tape-btn:hover {
-  transform: translateX(38px);
-  box-shadow:
-    -12px 0 24px rgba(0, 0, 0, 0.45),
-    0 12px 28px rgba(0, 0, 0, 0.25);
-  filter: brightness(1.05);
+  animation: tape-hovering 1.8s ease-in-out infinite;
+  filter: brightness(1.08);
+  z-index: 30;
+}
+
+@keyframes tape-hovering {
+  0% {
+    transform: translateX(85px) translateY(0);
+    box-shadow: -16px 4px 28px rgba(0, 0, 0, 0.45), 0 10px 24px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: translateX(92px) translateY(-3px);
+    box-shadow: -22px 8px 36px rgba(0, 0, 0, 0.55), 0 18px 34px rgba(0, 0, 0, 0.38);
+  }
+  100% {
+    transform: translateX(85px) translateY(0);
+    box-shadow: -16px 4px 28px rgba(0, 0, 0, 0.45), 0 10px 24px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .rack-tape-btn:hover .tape-eject-arrow {
@@ -450,7 +491,7 @@ button {
 }
 
 .rack-tape-btn:active {
-  transform: translateX(25px) scale(0.98);
+  transform: translateX(60px) scale(0.98);
 }
 
 /* Ejecting animation when clicked */
@@ -460,9 +501,113 @@ button {
 }
 
 @keyframes tape-eject {
-  0% { transform: translateX(38px); opacity: 1; }
-  40% { transform: translateX(80px); opacity: 0.95; }
-  100% { transform: translateX(380px); opacity: 0; }
+  0% { transform: translateX(85px); opacity: 1; }
+  35% { transform: translateX(140px); opacity: 0.95; }
+  100% { transform: translateX(450px); opacity: 0; }
+}
+
+.rack-frame {
+  overflow: visible !important;
+}
+
+.rack-slot {
+  overflow: visible !important;
+}
+
+/* ===== FULL CASSETTE HOVER CARD (Image 1 Inspo) ===== */
+.full-tape-hover-card {
+  position: absolute;
+  left: 102%;
+  top: 50%;
+  width: clamp(280px, 32vw, 380px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-50%) translateX(10px) rotate(-14deg) scale(0.85);
+  transition:
+    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.25);
+  z-index: 99;
+  will-change: transform, opacity;
+}
+
+.rack-slot:hover .full-tape-hover-card,
+.rack-tape-btn:hover ~ .full-tape-hover-card {
+  opacity: 1;
+  animation: full-cassette-hover-float 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes full-cassette-hover-float {
+  0% {
+    transform: translateY(-50%) translateX(24px) rotate(-11deg) scale(1);
+    filter: drop-shadow(0 26px 50px rgba(50, 25, 140, 0.35));
+  }
+  50% {
+    transform: translateY(calc(-50% - 10px)) translateX(28px) rotate(-8deg) scale(1.02);
+    filter: drop-shadow(0 38px 70px rgba(50, 25, 140, 0.45));
+  }
+  100% {
+    transform: translateY(-50%) translateX(24px) rotate(-11deg) scale(1);
+    filter: drop-shadow(0 26px 50px rgba(50, 25, 140, 0.35));
+  }
+}
+
+.full-tape-inner {
+  position: relative;
+  width: 100%;
+}
+
+.full-tape-inner svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.rack-slot:hover .full-tape-inner .reel {
+  animation: spin 2.5s linear infinite;
+}
+
+/* Floating speech-bubble chips like Image 1 */
+.chip-popout {
+  position: absolute;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  box-shadow: 0 12px 28px -4px rgba(22, 20, 42, 0.22), 0 2px 6px rgba(0,0,0,0.06);
+  font-size: 0.8rem;
+  line-height: 1.25;
+  white-space: nowrap;
+  color: #16142A;
+  z-index: 10;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.chip-popout b {
+  display: block;
+  font-weight: 700;
+  color: #12131A;
+}
+
+.chip-popout .s {
+  display: block;
+  font-size: 0.7rem;
+  color: #6C6A86;
+}
+
+.chip-popout-top {
+  top: -10px;
+  right: -10px;
+}
+
+.chip-popout-bottom {
+  bottom: -12px;
+  left: -12px;
+}
+
+@media (max-width: 900px) {
+  .full-tape-hover-card {
+    display: none; /* keep clean on narrow mobile */
+  }
 }
 
 .rack-foot {
