@@ -1,6 +1,26 @@
 (function () {
   /* ---------- Apps Data ---------- */
+  var NOTEBOOK_CAS = {
+    body: '#C5A582',
+    label: '#FAF7F0',
+    ink: '#2E2218',
+    dark: '#543F2F',
+    reel: '#FAF7F0',
+    base: '#AB8765',
+    stripe: '#D97706',
+    mark: null,
+    icon: 'notebook-icon'
+  };
+
   var APPS = [
+    {
+      slug: 'mynotebook',
+      name: 'myNotebook',
+      kind: 'Notebook',
+      url: 'myNotebook.html',
+      cas: NOTEBOOK_CAS,
+      tagline: 'Future concepts, sketches and creative worldbuilding.'
+    },
     {
       slug: 'blueprintv3',
       name: 'Blueprintv3',
@@ -97,9 +117,6 @@
   var intro = document.getElementById('intro');
   var home = document.getElementById('home');
 
-  var cassetteBtn = document.getElementById('cassette');
-  if (cassetteBtn) cassetteBtn.innerHTML = cassette('Hexagonum', HEX);
-
   var heroTape = document.getElementById('hero-tape');
   if (heroTape) heroTape.innerHTML = cassette('Hexagonum', HEX);
 
@@ -107,13 +124,13 @@
   var busy = false, timers = [], ctx = null;
   document.body.classList.add('locked');
 
-  function click() {
+  function click(vol) {
     try {
       var AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
       if (!ctx) ctx = new AC();
       if (ctx.state === 'suspended') ctx.resume();
-      var len = Math.floor(ctx.sampleRate * 0.05),
+      var len = Math.floor(ctx.sampleRate * 0.04),
           buf = ctx.createBuffer(1, len, ctx.sampleRate),
           d = buf.getChannelData(0);
       for (var i = 0; i < len; i++) {
@@ -123,10 +140,10 @@
       src.buffer = buf;
       var f = ctx.createBiquadFilter();
       f.type = 'bandpass';
-      f.frequency.value = 1800;
-      f.Q.value = 0.9;
+      f.frequency.value = 1900;
+      f.Q.value = 1.0;
       var g = ctx.createGain();
-      g.gain.value = 0.5;
+      g.gain.value = vol !== undefined ? vol : 0.45;
       src.connect(f);
       f.connect(g);
       g.connect(ctx.destination);
@@ -147,20 +164,78 @@
     }, reduce ? 20 : 650);
   }
 
-  function enter() {
-    if (busy || !intro) return;
-    busy = true;
-    intro.classList.add('play');
-    click();
-    if (reduce) {
-      later(closeIntro, 150);
-      return;
-    }
-    later(click, 850);
-    later(closeIntro, 1600);
+  var cassetteNotebookBtn = document.getElementById('cassette-notebook');
+  var cassetteBtn = document.getElementById('cassette');
+  var cassetteBpBtn = document.getElementById('cassette-bp');
+  var cassetteBlankBtn = document.getElementById('cassette-blank');
+
+  // Hover click sound on tapes
+  document.querySelectorAll('.rack-tape-btn').forEach(function (btn) {
+    btn.addEventListener('mouseenter', function () {
+      if (!busy) click(0.18);
+    });
+  });
+
+  // myNotebook Tape Click
+  if (cassetteNotebookBtn) {
+    cassetteNotebookBtn.addEventListener('click', function () {
+      if (busy || !intro) return;
+      busy = true;
+      cassetteNotebookBtn.classList.add('ejecting');
+      intro.classList.add('play');
+      click(0.6);
+      if (reduce) {
+        window.location.href = 'myNotebook.html';
+        return;
+      }
+      later(function () { click(0.4); }, 220);
+      later(function () {
+        window.location.href = 'myNotebook.html';
+      }, 500);
+    });
   }
 
-  if (cassetteBtn) cassetteBtn.addEventListener('click', enter);
+  // Hexagonum Studio Tape Click
+  if (cassetteBtn) {
+    cassetteBtn.addEventListener('click', function () {
+      if (busy || !intro) return;
+      busy = true;
+      cassetteBtn.classList.add('ejecting');
+      intro.classList.add('play');
+      click(0.6);
+      if (reduce) {
+        later(closeIntro, 100);
+        return;
+      }
+      later(function () { click(0.35); }, 220);
+      later(closeIntro, 550);
+    });
+  }
+
+  // Blueprintv3 Tape Click
+  if (cassetteBpBtn) {
+    cassetteBpBtn.addEventListener('click', function () {
+      if (busy || !intro) return;
+      busy = true;
+      cassetteBpBtn.classList.add('ejecting');
+      intro.classList.add('play');
+      click(0.6);
+      later(function () {
+        window.location.href = 'blueprint-v3.html';
+      }, 480);
+    });
+  }
+
+  // Blank/Coming Soon Tape
+  if (cassetteBlankBtn) {
+    cassetteBlankBtn.addEventListener('click', function () {
+      click(0.3);
+      cassetteBlankBtn.style.transform = 'translateX(18px)';
+      setTimeout(function () {
+        cassetteBlankBtn.style.transform = '';
+      }, 250);
+    });
+  }
 
   var skipBtn = document.getElementById('skip');
   if (skipBtn) {
@@ -453,8 +528,10 @@
     });
   });
 
-  /* Handle direct hash on load (e.g., #blueprintv3) */
+  /* Handle direct hash on load (e.g., #blueprintv3, #mynotebook) */
   if (location.hash === '#blueprintv3' || location.hash === '#blueprint-v3') {
     window.location.href = 'blueprint-v3.html';
+  } else if (location.hash === '#mynotebook' || location.hash === '#myNotebook') {
+    window.location.href = 'myNotebook.html';
   }
 })();

@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>myNotebook · Hexagonum</title>
+  <meta name="description" content="myNotebook – Offizielle Ankündigungen, Dev-Logs und Zukunftsideen von Hexagonum.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: #0D0A14;
+      color: #16142A;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* ===== TOP RETURN BUTTON ONLY ===== */
+    .btn-back {
+      position: fixed;
+      top: max(16px, env(safe-area-inset-top, 16px));
+      left: max(16px, env(safe-area-inset-left, 16px));
+      z-index: 999;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(18, 14, 28, 0.75);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      cursor: pointer;
+    }
+    .btn-back:hover {
+      background: rgba(30, 22, 50, 0.95);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateX(-3px) scale(1.06);
+    }
+    .btn-back svg { display: block; flex: none; }
+
+    /* ===== DESK SCENE (Cartoon Book on Desk) ===== */
+    #desk-scene {
+      position: fixed; inset: 0;
+      background: url('img/desk_notebook_closed.jpg') center center / cover no-repeat;
+      display: flex; align-items: center; justify-content: center;
+      transition: filter 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+      will-change: transform, filter, opacity;
+    }
+    #desk-scene.zooming {
+      transform: scale(1.08);
+      filter: blur(3px);
+      opacity: 0.15;
+    }
+
+    /* Vignette overlay */
+    #desk-scene::after {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 90% 80% at 50% 55%, transparent 40%, rgba(10, 7, 18, 0.45) 95%);
+    }
+
+    /* Hotspot over the notebook on the table */
+    #notebook-hotspot {
+      position: relative;
+      z-index: 10;
+      width: clamp(260px, 36vw, 440px);
+      aspect-ratio: 4 / 3.4;
+      margin-top: 8vh;
+      margin-left: 2vw;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 12px;
+      transition: transform 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.25);
+    }
+
+    /* Glow outline on hover */
+    #notebook-hotspot::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: 16px;
+      border: 2px dashed rgba(255, 220, 140, 0);
+      background: rgba(255, 235, 170, 0);
+      transition: all 0.35s ease;
+      pointer-events: none;
+    }
+
+    #notebook-hotspot:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    #notebook-hotspot:hover::before {
+      border-color: rgba(255, 230, 150, 0.7);
+      background: rgba(255, 220, 130, 0.08);
+      box-shadow: 0 0 35px rgba(255, 200, 100, 0.35);
+    }
+
+    /* Floating hint button below the book */
+    .desk-open-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      background: rgba(20, 15, 28, 0.86);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 230, 160, 0.3);
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #FFF3D6;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 20px rgba(230, 170, 70, 0.2);
+      transition: transform 0.25s ease, background 0.25s ease;
+      pointer-events: none;
+      animation: float-pulse 3s ease-in-out infinite;
+    }
+
+    #notebook-hotspot:hover .desk-open-badge {
+      transform: translateY(-3px) scale(1.06);
+      background: rgba(35, 24, 50, 0.95);
+      border-color: rgba(255, 230, 160, 0.6);
+    }
+
+    @keyframes float-pulse {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    /* ===== OPEN NOTEBOOK OVERLAY ===== */
+    /* Requirement 3: Background in wood design */
+    #open-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background:
+        radial-gradient(ellipse 95% 85% at 50% 50%, rgba(20, 14, 8, 0.25) 0%, rgba(10, 6, 3, 0.68) 100%),
+        url('img/wood_desk_open_bg.jpg') center center / cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.95);
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #open-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    /* Close button top right */
+    .btn-close-book {
+      position: absolute;
+      top: max(16px, env(safe-area-inset-top, 16px));
+      right: max(16px, env(safe-area-inset-right, 16px));
+      z-index: 120;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: rgba(24, 18, 12, 0.82);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #F5EFE6;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-close-book:hover {
+      background: rgba(45, 32, 20, 0.95);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-2px);
+      color: #FFFFFF;
+    }
+
+    /* ===== STRAIGHT OPEN NOTEBOOK (Requirement 1) ===== */
+    .notebook-container {
+      position: relative;
+      width: 100%;
+      max-width: 980px;
+      height: clamp(440px, 76vh, 640px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Navigation Arrows */
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      z-index: 30;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(26, 18, 12, 0.85);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .nav-arrow:hover {
+      background: rgba(48, 34, 22, 0.98);
+      border-color: rgba(255, 255, 255, 0.45);
+      transform: translateY(-50%) scale(1.1);
+    }
+    .nav-arrow:disabled {
+      opacity: 0.2;
+      pointer-events: none;
+    }
+    #btn-prev { left: -22px; }
+    #btn-next { right: -22px; }
+
+    /* The Straight Open Book */
+    .notebook-spread {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      border-radius: 12px;
+      background: #FFFFFF;
+      box-shadow:
+        0 35px 80px -15px rgba(0, 0, 0, 0.7),
+        0 12px 30px -8px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transform: none !important; /* Guarantee 100% straight notebook */
+    }
+
+    .notebook-spread.turning {
+      animation: spread-flip 0.35s ease;
+    }
+
+    @keyframes spread-flip {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(0.92); }
+    }
+
+    /* Center Spine Crease */
+    .notebook-spine {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 36px;
+      transform: translateX(-50%);
+      z-index: 20;
+      background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.2) 0%,
+        rgba(0, 0, 0, 0.06) 35%,
+        rgba(0, 0, 0, 0.03) 50%,
+        rgba(0, 0, 0, 0.06) 65%,
+        rgba(0, 0, 0, 0.2) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Bookmark Ribbon */
+    .bookmark-ribbon {
+      position: absolute;
+      top: -6px;
+      left: calc(50% - 7px);
+      width: 14px;
+      height: calc(100% + 28px);
+      background: linear-gradient(180deg, #991B1B 0%, #DC2626 80%, #7F1D1D 100%);
+      box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.35);
+      z-index: 25;
+      pointer-events: none;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 10px), 0 100%);
+    }
+
+    /* ===== CLEAN WHITE PAGES (Requirement 1) ===== */
+    .page {
+      flex: 1;
+      height: 100%;
+      background: #FFFFFF;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 38px 42px 44px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .page::-webkit-scrollbar { width: 5px; }
+    .page::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.12); border-radius: 999px; }
+
+    .page-left {
+      border-right: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: inset -15px 0 25px rgba(0, 0, 0, 0.03);
+    }
+
+    .page-right {
+      box-shadow: inset 15px 0 25px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Page Content Styling: Editorial & Announcement */
+    .page-badge {
+      align-self: flex-start;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .badge-purple { background: #F3EEFE; color: #7C3AED; }
+    .badge-blue { background: #EFF6FF; color: #2563EB; }
+    .badge-amber { background: #FEF3C7; color: #D97706; }
+
+    .page-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #12131A;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .page-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: #797E96;
+      margin-bottom: 20px;
+      display: block;
+      border-bottom: 1px solid #ECEEF4;
+      padding-bottom: 8px;
+    }
+
+    /* Announcement Cards & Paragraphs */
+    .announce-card {
+      background: #F8F9FC;
+      border: 1px solid #E8EBF3;
+      border-left: 4px solid #7C3AED;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+
+    .announce-card.card-blue { border-left-color: #2563EB; }
+    .announce-card.card-amber { border-left-color: #F59E0B; }
+    .announce-card.card-green { border-left-color: #10B981; }
+
+    .announce-title {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: #12131A;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .announce-text {
+      font-size: 0.86rem;
+      line-height: 1.55;
+      color: #4B4E63;
+    }
+
+    .bullet-list {
+      list-style: none;
+      margin: 10px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .bullet-list li {
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: #374151;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .bullet-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: #7C3AED;
+      font-size: 0.8rem;
+    }
+
+    /* Page Footer / Page Number */
+    .page-foot {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid #ECEEF4;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      color: #9CA3AF;
+    }
+
+    /* Bottom Page Indicator */
+    .page-counter-badge {
+      margin-top: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.75);
+      background: rgba(20, 15, 10, 0.7);
+      padding: 4px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+      .notebook-spread { flex-direction: column; overflow-y: auto; }
+      .notebook-spine, .bookmark-ribbon { display: none; }
+      .page-left { border-right: none; border-bottom: 1px solid #ECEEF4; }
+      .page { padding: 24px 22px; }
+      #btn-prev { left: 4px; }
+      #btn-next { right: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Return Button: ONLY element at the top, returns to index.html -->
+  <a href="index.html" class="btn-back" aria-label="Zurück zum Studio" title="Zurück zum Studio">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/>
+    </svg>
+  </a>
+
+  <!-- ===== DESK SCENE ===== -->
+  <div id="desk-scene">
+    <!-- Clickable Hotspot over the notebook on the table -->
+    <div id="notebook-hotspot" role="button" tabindex="0" aria-label="Notizbuch aufschlagen">
+      <div class="desk-open-badge">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+        <span>Klicken zum Aufschlagen</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== OPEN NOTEBOOK OVERLAY ===== -->
+  <div id="open-overlay" role="dialog" aria-modal="true" aria-label="Notizbuch geöffnet">
+    <!-- Close Button -->
+    <button class="btn-close-book" id="btn-close-book" type="button">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+      <span>Schließen</span>
+    </button>
+
+    <div class="notebook-container">
+      <!-- Prev Navigation Button -->
+      <button class="nav-arrow" id="btn-prev" type="button" aria-label="Vorherige Doppelseite">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+
+      <!-- Straight Open Notebook Spread -->
+      <div class="notebook-spread" id="notebook-spread">
+        <div class="notebook-spine"></div>
+        <div class="bookmark-ribbon"></div>
+
+        <!-- Left Page -->
+        <div class="page page-left" id="page-left">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Right Page -->
+        <div class="page page-right" id="page-right">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Next Navigation Button -->
+      <button class="nav-arrow" id="btn-next" type="button" aria-label="Nächste Doppelseite">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Clean Page Counter -->
+    <div class="page-counter-badge" id="page-counter">Seite 1 von 3</div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* Audio Context */
+    var audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playRustle() {
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        var len = Math.floor(audioCtx.sampleRate * 0.12);
+        var buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+        var d = buf.getChannelData(0);
+        for (var i = 0; i < len; i++) {
+          d[i] = (Math.random() * 2 - 1) * Math.sin((i / len) * Math.PI) * 0.35;
+        }
+        var src = audioCtx.createBufferSource();
+        src.buffer = buf;
+        var f = audioCtx.createBiquadFilter();
+        f.type = 'lowpass';
+        f.frequency.value = 1300;
+        var g = audioCtx.createGain();
+        g.gain.value = 0.45;
+        src.connect(f);
+        f.connect(g);
+        g.connect(audioCtx.destination);
+        src.start();
+      } catch (e) {}
+    }
+
+    function playThump() {
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        var osc = audioCtx.createOscillator();
+        var g = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(240, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.12);
+        g.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.13);
+        setTimeout(playRustle, 70);
+      } catch (e) {}
+    }
+
+    /* Content Data: Clean White Announcement Pages */
+    var SPREADS = [
+      {
+        pageNumber: "1",
+        left: `
+          <span class="page-badge badge-purple">HEXAGONUM DEV-LOG · #01</span>
+          <h2 class="page-title">Offizielles Dev-Log &amp; Ankündigungen</h2>
+          <span class="page-date">27. Oktober 2026 · Release &amp; Status</span>
+
+          <div class="announce-card">
+            <h3 class="announce-title">🚀 Blueprintv3 im Betatest</h3>
+            <p class="announce-text">
+              Nach intensiver Konzeption startet Blueprintv3 in die Testphase. Jede Anwendung im Hexagonum Studio erhält ihre eigene visuelle Identität, Farbwelt und eine passende Kassette.
+            </p>
+          </div>
+
+          <div class="announce-card card-blue">
+            <h3 class="announce-title">📼 Das Vintage Cassette-Rack ist live</h3>
+            <p class="announce-text">
+              Das neue Kassetten-Archiv im Studio-Startbildschirm ist ab sofort verfügbar. Kassetten können nun direkt aus dem Rack ausgewählt und angesteuert werden.
+            </p>
+          </div>
+
+          <div class="page-foot">
+            <span>HEXAGONUM STUDIO</span>
+            <span>DEV-LOG</span>
+          </div>
+        `,
+        right: `
+          <span class="page-badge badge-blue">KONZEPTE &amp; VISION</span>
+          <h2 class="page-title">myNotebook als Veröffentlichungs-Hub</h2>
+          <span class="page-date">Zukunftsideen &amp; Sneak Peeks</span>
+
+          <p class="announce-text" style="margin-bottom:14px;">
+            Hier im Notizbuch veröffentlichen wir ab sofort alle Entwicklungs-Updates, Konzeptentwürfe und neuen Ideen direkt aus dem Studio.
+          </p>
+
+          <div class="announce-card card-amber">
+            <h3 class="announce-title">✨ Geplante Features für 2026/2027:</h3>
+            <ul class="bullet-list">
+              <li><strong>Interaktive Cassette Player:</strong> Echte analoge Audio-Effekte mit Bandsättigung &amp; A/B-Seiten.</li>
+              <li><strong>Community Cassettes:</strong> Nutzer können eigene Kassetten-Apps und Stories einreichen.</li>
+              <li><strong>Live Dev Updates:</strong> Direkte Einblicke in laufende Builds und Sketches.</li>
+            </ul>
+          </div>
+
+          <div class="page-foot">
+            <span>KONZEPT V1.0</span>
+            <span>SEITE 01</span>
+          </div>
+        `
+      },
+      {
+        pageNumber: "2",
+        left: `
+          <span class="page-badge badge-amber">APP-KONZEPT #02</span>
+          <h2 class="page-title">OC's World – Storybook &amp; Panels</h2>
+          <span class="page-date">Charakter-Archiv &amp; Manga Reader</span>
+
+          <div class="announce-card card-amber">
+            <h3 class="announce-title">✦ Storybook &amp; Manga-Erlebnis</h3>
+            <p class="announce-text">
+              Ein interaktiver Reader mit handgezeichneten Panels, integrierter Lo-Fi Hintergrundmusik und sammelbaren Charakter-Kassetten.
+            </p>
+          </div>
+
+          <div class="announce-card card-green">
+            <h3 class="announce-title">✦ Die Figuren:</h3>
+            <ul class="bullet-list">
+              <li><strong>Kira (Adventurer v1.2):</strong> Beweglich, lebendig und mit Soul-Edge Klinge ausgerüstet.</li>
+              <li><strong>Fantasie &amp; Lennor:</strong> Die kreative Kraft hinter den Welten.</li>
+              <li><strong>Companion Drones:</strong> Kleine Helfer für Notizen und Navigation.</li>
+            </ul>
+          </div>
+
+          <div class="page-foot">
+            <span>PROJEKT KIRA</span>
+            <span>SEITE 02</span>
+          </div>
+        `,
+        right: `
+          <span class="page-badge badge-purple">AUDIO &amp; DESIGN</span>
+          <h2 class="page-title">Analog Tape Sound Engine</h2>
+          <span class="page-date">Hardware-Haptik im Web</span>
+
+          <p class="announce-text" style="margin-bottom:14px;">
+            Software darf sich wieder lebendig und haptisch anfühlen. Wir übertragen das Gefühl von Kassettenbändern und Klick-Schaltern ins Web:
+          </p>
+
+          <div class="announce-card card-blue">
+            <h3 class="announce-title">✦ Technische Eckpunkte:</h3>
+            <ul class="bullet-list">
+              <li>Synthetisierte Audio-Engine ohne schwere MP3-Dateien.</li>
+              <li>Mechanische Klicks für Schalter, Eject und Playheads.</li>
+              <li>Bandwobble &amp; Tape-Noise Simulation per Web Audio API.</li>
+              <li>Nahtloses Blättern ohne Ladezeiten.</li>
+            </ul>
+          </div>
+
+          <div class="page-foot">
+            <span>AUDIO SYSTEM</span>
+            <span>SEITE 03</span>
+          </div>
+        `
+      },
+      {
+        pageNumber: "3",
+        left: `
+          <span class="page-badge badge-green">STUDIO ROADMAP</span>
+          <h2 class="page-title">Roadmap 2026 / 2027</h2>
+          <span class="page-date">Meilensteine &amp; nächste Releases</span>
+
+          <div class="announce-card card-green">
+            <h3 class="announce-title">Q4 2026: Blueprintv3 Launch</h3>
+            <p class="announce-text">
+              Fertigstellung der ersten Haupt-App im Studio. Öffentliche Vorstellung und Bereitstellung der ersten Cassette.
+            </p>
+          </div>
+
+          <div class="announce-card card-blue">
+            <h3 class="announce-title">Q1 2027: Analog Tape Player</h3>
+            <p class="announce-text">
+              Veröffentlichung des virtuellen Kassettenrekorders mit frei wählbaren Soundtracks und Themes.
+            </p>
+          </div>
+
+          <div class="page-foot">
+            <span>HEXAGONUM LABS</span>
+            <span>SEITE 04</span>
+          </div>
+        `,
+        right: `
+          <span class="page-badge badge-purple">ABOUT US</span>
+          <h2 class="page-title">A Studio, Not An Agency</h2>
+          <span class="page-date">Philosophie &amp; Handwerk</span>
+
+          <p class="announce-text" style="margin-bottom:14px;">
+            Wir sind ein kleines Zwei-Mann-Studio. Wir erfinden Apps, gestalten sie, programmieren sie und veröffentlichen sie selbst. Jede App erhält ihren eigenen Look, ihre eigene Seite und ihre eigene Kassette.
+          </p>
+
+          <div class="announce-card">
+            <h3 class="announce-title">✨ Unser Versprechen:</h3>
+            <ul class="bullet-list">
+              <li>Keine Standard-Templates, keine generischen Web-Apps.</li>
+              <li>Handgefertigte Details und echte Begeisterung fürs Design.</li>
+              <li>Transparente Updates und Dev-Logs in diesem Notizbuch.</li>
+            </ul>
+          </div>
+
+          <div class="page-foot">
+            <span>END OF VOLUME 01</span>
+            <span>SEITE 05</span>
+          </div>
+        `
+      }
+    ];
+
+    var currentSpread = 0;
+    var isOpen = false;
+
+    var deskScene = document.getElementById('desk-scene');
+    var notebookHotspot = document.getElementById('notebook-hotspot');
+    var openOverlay = document.getElementById('open-overlay');
+    var btnCloseBook = document.getElementById('btn-close-book');
+    var btnPrev = document.getElementById('btn-prev');
+    var btnNext = document.getElementById('btn-next');
+    var pageLeft = document.getElementById('page-left');
+    var pageRight = document.getElementById('page-right');
+    var pageCounter = document.getElementById('page-counter');
+    var notebookSpread = document.getElementById('notebook-spread');
+
+    function renderSpread(idx) {
+      if (idx < 0 || idx >= SPREADS.length) return;
+      currentSpread = idx;
+
+      notebookSpread.classList.add('turning');
+      setTimeout(function () {
+        notebookSpread.classList.remove('turning');
+      }, 350);
+
+      var sp = SPREADS[idx];
+      pageLeft.innerHTML = sp.left;
+      pageRight.innerHTML = sp.right;
+
+      pageCounter.textContent = 'Doppelseite ' + (idx + 1) + ' von ' + SPREADS.length;
+
+      btnPrev.disabled = (idx === 0);
+      btnNext.disabled = (idx === SPREADS.length - 1);
+    }
+
+    function openNotebook() {
+      if (isOpen) return;
+      isOpen = true;
+      playThump();
+      deskScene.classList.add('zooming');
+      renderSpread(currentSpread);
+      setTimeout(function () {
+        openOverlay.classList.add('active');
+      }, 200);
+    }
+
+    function closeNotebook() {
+      if (!isOpen) return;
+      isOpen = false;
+      playThump();
+      openOverlay.classList.remove('active');
+      setTimeout(function () {
+        deskScene.classList.remove('zooming');
+      }, 250);
+    }
+
+    function turnPage(dir) {
+      var nextIdx = currentSpread + dir;
+      if (nextIdx >= 0 && nextIdx < SPREADS.length) {
+        playRustle();
+        renderSpread(nextIdx);
+      }
+    }
+
+    /* Event Listeners */
+    if (notebookHotspot) {
+      notebookHotspot.addEventListener('click', openNotebook);
+      notebookHotspot.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openNotebook();
+        }
+      });
+    }
+
+    if (btnCloseBook) btnCloseBook.addEventListener('click', closeNotebook);
+
+    if (btnPrev) btnPrev.addEventListener('click', function () { turnPage(-1); });
+    if (btnNext) btnNext.addEventListener('click', function () { turnPage(1); });
+
+    /* Clicking on the wooden background outside the book closes it */
+    openOverlay.addEventListener('click', function (e) {
+      if (e.target === openOverlay) {
+        closeNotebook();
+      }
+    });
+
+    /* Keyboard navigation */
+    window.addEventListener('keydown', function (e) {
+      if (!isOpen) return;
+      if (e.key === 'Escape') closeNotebook();
+      if (e.key === 'ArrowRight') turnPage(1);
+      if (e.key === 'ArrowLeft') turnPage(-1);
+    });
+
+    /* Auto-open if #open in URL */
+    if (window.location.hash === '#open') {
+      setTimeout(openNotebook, 250);
+    }
+
+  })();
+  </script>
+</body>
+</html>

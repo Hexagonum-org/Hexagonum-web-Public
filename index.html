@@ -33,6 +33,21 @@
           <path d="M43 21V79M43 46H79" />
         </g>
       </symbol>
+      <symbol id="notebook-icon" viewBox="0 0 100 100">
+        <rect width="100" height="100" rx="22" fill="#C5A582" />
+        <g fill="none" stroke="#2E2218" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="32" y="20" width="46" height="60" rx="5" fill="#FAF7F0" stroke="#543F2F" stroke-width="3" />
+          <line x1="28" y1="28" x2="36" y2="28" stroke="#543F2F" stroke-width="3.5" />
+          <line x1="28" y1="40" x2="36" y2="40" stroke="#543F2F" stroke-width="3.5" />
+          <line x1="28" y1="52" x2="36" y2="52" stroke="#543F2F" stroke-width="3.5" />
+          <line x1="28" y1="64" x2="36" y2="64" stroke="#543F2F" stroke-width="3.5" />
+          <line x1="28" y1="74" x2="36" y2="74" stroke="#543F2F" stroke-width="3.5" />
+          <line x1="68" y1="20" x2="68" y2="80" stroke="#2E2218" stroke-width="4" />
+          <line x1="40" y1="36" x2="60" y2="36" stroke="#8D6E63" stroke-width="2.5" />
+          <line x1="40" y1="46" x2="56" y2="46" stroke="#8D6E63" stroke-width="2.5" />
+          <line x1="40" y1="56" x2="62" y2="56" stroke="#8D6E63" stroke-width="2.5" />
+        </g>
+      </symbol>
       <symbol id="mark" viewBox="0 0 100 100">
         <path d="M50 4 L89.8 27 V73 L50 96 L10.2 73 V27 Z" style="fill:var(--mark-hex);stroke:var(--mark-hex)"
           stroke-width="8" stroke-linejoin="round" />
@@ -43,15 +58,145 @@
     </defs>
   </svg>
 
-  <!-- Intro -->
+  <!-- Intro (Clean white with retro cassette rack) -->
   <div class="intro" id="intro">
-    <div class="bob">
-      <button class="cassette-btn" id="cassette" type="button"
-        aria-label="Insert the cassette to enter the Hexagonum website"></button>
+    <div class="intro-header">
+      <span class="rack-badge">HEXAGONUM TAPE ARCHIVE</span>
+      <h1 class="rack-title">Wähle eine Kassette</h1>
+      <p class="rack-subtitle">Fahre über ein Band zum Herausziehen · Klicke zum Starten</p>
     </div>
-    <p class="intro-hint">Click the cassette to enter</p>
-    <button class="skip" id="skip" type="button">Skip intro</button>
+
+    <div class="cassette-rack" role="region" aria-label="Vintage Kassetten-Rack">
+      <div class="rack-frame">
+        <div class="rack-header-strip">
+          <span class="rack-brand">HEXAGONUM CASSETTE STORAGE</span>
+          <span class="rack-indicator">SLOT 01–04</span>
+        </div>
+
+        <div class="rack-slots">
+          <!-- Slot 1: myNotebook -->
+          <div class="rack-slot" data-slot="mynotebook">
+            <button class="rack-tape-btn tape-notebook" id="cassette-notebook" type="button"
+                    aria-label="myNotebook öffnen – Ideen &amp; Ankündigungen">
+              <div class="tape-notch">
+                <span class="notch-hole"></span>
+                <span class="notch-hole"></span>
+              </div>
+              <div class="tape-spine-body">
+                <div class="tape-label">
+                  <div class="tape-meta-left">
+                    <span class="tape-tag">NAME</span>
+                    <strong class="tape-title">myNotebook</strong>
+                    <span class="tape-date">DATE: 2026</span>
+                  </div>
+                  <div class="tape-color-bars" aria-hidden="true">
+                    <span class="bar bar-c1"></span>
+                    <span class="bar bar-c2"></span>
+                    <span class="bar bar-c3"></span>
+                    <span class="bar bar-c4"></span>
+                    <span class="bar bar-c5"></span>
+                  </div>
+                  <div class="tape-meta-right">
+                    <span class="tape-side">SIDE A</span>
+                    <span class="tape-badge-vhs">IDEAS</span>
+                  </div>
+                </div>
+              </div>
+              <div class="tape-eject-arrow" aria-hidden="true">➔</div>
+            </button>
+          </div>
+
+          <!-- Slot 2: Hexagonum Studio -->
+          <div class="rack-slot" data-slot="hexagonum">
+            <button class="rack-tape-btn tape-studio" id="cassette" type="button"
+                    aria-label="Hexagonum Studio betreten">
+              <div class="tape-notch">
+                <span class="notch-hole"></span>
+                <span class="notch-hole"></span>
+              </div>
+              <div class="tape-spine-body">
+                <div class="tape-label">
+                  <div class="tape-meta-left">
+                    <svg class="tape-mark-mini" viewBox="0 0 100 100" aria-hidden="true"><use href="#mark"/></svg>
+                    <strong class="tape-title">Hexagonum</strong>
+                    <span class="tape-date">STUDIO · OWN APPS</span>
+                  </div>
+                  <div class="tape-gradient-bar" aria-hidden="true"></div>
+                  <div class="tape-meta-right">
+                    <span class="tape-side">SIDE A · C90</span>
+                    <span class="tape-badge-vhs">STUDIO</span>
+                  </div>
+                </div>
+              </div>
+              <div class="tape-eject-arrow" aria-hidden="true">➔</div>
+            </button>
+          </div>
+
+          <!-- Slot 3: Blueprintv3 -->
+          <div class="rack-slot" data-slot="blueprint">
+            <button class="rack-tape-btn tape-blueprint" id="cassette-bp" type="button"
+                    aria-label="Blueprintv3 ansehen">
+              <div class="tape-notch">
+                <span class="notch-hole"></span>
+                <span class="notch-hole"></span>
+              </div>
+              <div class="tape-spine-body">
+                <div class="tape-label">
+                  <div class="tape-meta-left">
+                    <span class="tape-tag bp-tag">APP</span>
+                    <strong class="tape-title">Blueprintv3</strong>
+                    <span class="tape-date">CURRENT APP</span>
+                  </div>
+                  <div class="tape-bp-bar" aria-hidden="true"></div>
+                  <div class="tape-meta-right">
+                    <span class="tape-side">SIDE A</span>
+                    <span class="tape-badge-vhs bp-badge">LAUNCH</span>
+                  </div>
+                </div>
+              </div>
+              <div class="tape-eject-arrow" aria-hidden="true">➔</div>
+            </button>
+          </div>
+
+          <!-- Slot 4: Next Tape -->
+          <div class="rack-slot" data-slot="blank">
+            <button class="rack-tape-btn tape-blank" id="cassette-blank" type="button"
+                    aria-label="Next Tape – In the making">
+              <div class="tape-notch">
+                <span class="notch-hole"></span>
+                <span class="notch-hole"></span>
+              </div>
+              <div class="tape-spine-body">
+                <div class="tape-label">
+                  <div class="tape-meta-left">
+                    <span class="tape-tag">COMING SOON</span>
+                    <strong class="tape-title">Next Tape</strong>
+                    <span class="tape-date">HEXAGONUM LABS</span>
+                  </div>
+                  <div class="tape-hazard-bars" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                  <div class="tape-meta-right">
+                    <span class="tape-side">SIDE B</span>
+                    <span class="tape-badge-vhs blank-badge">SOON</span>
+                  </div>
+                </div>
+              </div>
+              <div class="tape-eject-arrow" aria-hidden="true">…</div>
+            </button>
+          </div>
+
+        </div>
+
+        <div class="rack-foot">
+          <span class="rack-serial">ANALOG ARCHIVE · HEXAGONUM 1984</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="skip" id="skip" type="button">Direkt zum Studio überspringen ›</button>
   </div>
+
 
   <!-- Home Content -->
   <div id="home">

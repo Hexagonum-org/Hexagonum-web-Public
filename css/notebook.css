@@ -1,0 +1,809 @@
+:root {
+  --bg-desk: #121019;
+  --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-hand: 'Caveat', cursive, sans-serif;
+  --font-print: 'Patrick Hand', cursive, sans-serif;
+  --kraft: #dfcfb2;
+  --kraft-dark: #b89f7a;
+  --paper-grid: #FAF9F5;
+  --grid-line: rgba(160, 175, 195, 0.32);
+  --ink-black: #1E222D;
+  --ink-orange: #E05A1B;
+  --ink-red: #D9383A;
+  --ink-yellow: #CCA212;
+  --ink-green: #2E8B57;
+  --ink-blue: #2563EB;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-ui);
+  background-color: var(--bg-desk);
+  color: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ==========================================================================
+   MINIMAL RETURN BUTTON (TOP-LEFT) - Only element at top, no titles!
+   ========================================================================== */
+.minimal-top {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top, 16px));
+  left: max(16px, env(safe-area-inset-left, 16px));
+  z-index: 999;
+}
+
+.return-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(18, 22, 34, 0.65);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #FFFFFF;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: pointer;
+}
+
+.return-symbol:hover {
+  background: rgba(30, 36, 56, 0.9);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateX(-3px) scale(1.06);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+.return-symbol:active {
+  transform: scale(0.95);
+}
+
+.return-symbol svg {
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.return-symbol:hover svg {
+  transform: translateX(-2px);
+}
+
+/* ==========================================================================
+   DESK VIEW (BACKGROUND & CLOSED NOTEBOOK)
+   ========================================================================== */
+.desk-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: url('../img/messy_desk_bg.jpg');
+  background-size: cover;
+  background-position: center bottom;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.8s ease, transform 0.8s ease;
+}
+
+.desk-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 65%, transparent 35%, rgba(10, 8, 16, 0.55) 85%, rgba(5, 4, 10, 0.85) 100%);
+  mix-blend-mode: multiply;
+}
+
+/* Desk closed notebook wrapper */
+.desk-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  margin-top: 6vh;
+  perspective: 1400px;
+  cursor: pointer;
+}
+
+.closed-book {
+  position: relative;
+  width: min(340px, 72vw);
+  aspect-ratio: 3 / 4.2;
+  border-radius: 12px 18px 18px 12px;
+  transform: rotateX(24deg) rotateZ(-4deg);
+  transform-style: preserve-3d;
+  box-shadow:
+    0 35px 50px -12px rgba(8, 6, 16, 0.8),
+    0 15px 25px -8px rgba(0, 0, 0, 0.6),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.5s ease;
+  background: #a9875c;
+  overflow: visible;
+}
+
+.closed-book:hover {
+  transform: rotateX(16deg) rotateZ(-2deg) translateY(-16px) scale(1.03);
+  box-shadow:
+    0 45px 70px -15px rgba(8, 6, 16, 0.9),
+    0 22px 35px -10px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(220, 175, 120, 0.25);
+}
+
+/* Realistic notebook cover image */
+.cover-surface {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px 18px 18px 8px;
+  background-image: url('../img/notebook_cover.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Layered book depth under cover */
+.book-thickness {
+  position: absolute;
+  top: 6px;
+  right: -8px;
+  bottom: -8px;
+  left: 6px;
+  background: #ECE5D5;
+  border-radius: 8px 16px 16px 8px;
+  z-index: -1;
+  box-shadow:
+    inset -2px 0 5px rgba(0, 0, 0, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.book-thickness::after {
+  content: '';
+  position: absolute;
+  inset: 2px -4px -4px 2px;
+  background: #DDD5C2;
+  border-radius: 8px 15px 15px 8px;
+  z-index: -2;
+}
+
+/* Click hint pill */
+.open-hint {
+  margin-top: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: rgba(18, 22, 34, 0.82);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #FAF7EE;
+  letter-spacing: 0.04em;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  animation: pulse-hint 2.6s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes pulse-hint {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+    box-shadow: 0 14px 30px rgba(220, 160, 90, 0.3);
+  }
+}
+
+/* Book opening state on desk */
+.desk-stage.opening .closed-book {
+  animation: book-open-anim 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes book-open-anim {
+  0% {
+    transform: rotateX(24deg) rotateZ(-4deg) scale(1);
+    opacity: 1;
+  }
+  40% {
+    transform: rotateX(5deg) rotateZ(0deg) translateY(-40px) scale(1.15);
+  }
+  100% {
+    transform: rotateX(0deg) rotateZ(0deg) translateY(0) scale(1.3);
+    opacity: 0;
+  }
+}
+
+.desk-stage.opening .open-hint {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* ==========================================================================
+   OPEN NOTEBOOK MODAL VIEW (IMAGE 1 DESIGN)
+   ========================================================================== */
+.open-notebook-container {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: radial-gradient(circle at center, #353D4F 0%, #202634 60%, #151822 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.94);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 16px;
+}
+
+.open-notebook-container.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+/* Outer frame mimicking Image 1's sleek tablet / workstation window */
+.book-device-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 1060px;
+  height: min(84vh, 700px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Notebook Header (Image 1 top: Title & Page count) */
+.notebook-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.notebook-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #FFFFFF;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.notebook-pages-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 3px;
+  font-family: var(--font-mono);
+}
+
+/* The physical book spread with background page depth */
+.notebook-spread-wrap {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 130px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 2000px;
+}
+
+/* Layered depth sheets visible behind open pages (Image 1 feature!) */
+.spread-depth-layers {
+  position: absolute;
+  width: 96%;
+  height: 98%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.depth-page-left-1,
+.depth-page-left-2,
+.depth-page-right-1,
+.depth-page-right-2 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 26px;
+  background: var(--paper-grid);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+}
+
+.depth-page-left-1 {
+  left: -14px;
+  width: 52%;
+  transform: rotate(-1.5deg) scale(0.985);
+  background: #E8DFCF;
+  opacity: 0.9;
+}
+
+.depth-page-left-2 {
+  left: -26px;
+  width: 52%;
+  transform: rotate(-3deg) scale(0.97);
+  background: #DFD4C0;
+  opacity: 0.65;
+}
+
+.depth-page-right-1 {
+  right: -14px;
+  width: 52%;
+  transform: rotate(1.5deg) scale(0.985);
+  opacity: 0.9;
+}
+
+.depth-page-right-2 {
+  right: -26px;
+  width: 52%;
+  transform: rotate(3deg) scale(0.97);
+  opacity: 0.65;
+}
+
+/* The active two-page spread book */
+.notebook-spread {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  border-radius: 28px;
+  box-shadow:
+    0 35px 80px -15px rgba(0, 0, 0, 0.65),
+    0 15px 35px -10px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background: #FDFDFB;
+  transform-style: preserve-3d;
+}
+
+/* Center Crease / Spine shadow */
+.notebook-crease {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 36px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg,
+    rgba(0, 0, 0, 0.22) 0%,
+    rgba(0, 0, 0, 0.08) 35%,
+    rgba(0, 0, 0, 0.04) 50%,
+    rgba(0, 0, 0, 0.08) 65%,
+    rgba(0, 0, 0, 0.22) 100%
+  );
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Left Page: Kraft Paper Sketchbook */
+.page-left {
+  flex: 1;
+  height: 100%;
+  background-color: var(--kraft);
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(0, 0, 0, 0.06) 0%, transparent 50%);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 10px 0 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sketch-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  filter: contrast(1.04) brightness(0.98);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Right Page: Graph / Grid Paper with Colored Handwritten Ideas */
+.page-right {
+  flex: 1;
+  height: 100%;
+  background-color: var(--paper-grid);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: center;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 34px 38px;
+  color: var(--ink-black);
+  box-shadow: inset -10px 0 25px rgba(0, 0, 0, 0.04);
+}
+
+/* Custom scrollbar for right page */
+.page-right::-webkit-scrollbar {
+  width: 6px;
+}
+.page-right::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+}
+
+/* Handwritten Text Content */
+.handwritten-content {
+  font-family: var(--font-hand);
+  font-size: 1.45rem;
+  line-height: 1.48;
+  letter-spacing: 0.01em;
+  opacity: 1;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.hw-heading {
+  font-family: var(--font-hand);
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #111827;
+  margin-bottom: 14px;
+}
+
+.hw-orange {
+  color: var(--ink-orange);
+  font-weight: 600;
+}
+
+.hw-red {
+  color: var(--ink-red);
+  font-weight: 700;
+}
+
+.hw-yellow {
+  color: var(--ink-yellow);
+  font-weight: 600;
+}
+
+.hw-green {
+  color: var(--ink-green);
+  font-weight: 600;
+}
+
+.hw-blue {
+  color: var(--ink-blue);
+  font-weight: 600;
+}
+
+.hw-list {
+  list-style: none;
+  margin: 14px 0;
+}
+
+.hw-list li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.hw-list li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: var(--ink-orange);
+  font-size: 0.9em;
+}
+
+/* User Idea Input Card */
+.add-idea-box {
+  margin-top: 20px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px dashed rgba(0, 0, 0, 0.22);
+  border-radius: 12px;
+}
+
+.add-idea-box textarea {
+  width: 100%;
+  min-height: 70px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  color: var(--ink-black);
+  outline: none;
+  resize: vertical;
+}
+
+.add-idea-box .add-btn {
+  margin-top: 6px;
+  padding: 5px 14px;
+  border-radius: 8px;
+  background: #1E222D;
+  color: #fff;
+  border: none;
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-idea-box .add-btn:hover {
+  background: var(--ink-orange);
+}
+
+/* ==========================================================================
+   PAGE TURN NAVIGATION BUTTONS (LEFT & RIGHT OF BOOK)
+   ========================================================================== */
+.page-turn-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(18, 22, 34, 0.75);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 30;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.page-turn-btn:hover {
+  background: rgba(30, 36, 56, 0.95);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.page-turn-btn:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.btn-prev {
+  left: -22px;
+}
+
+.btn-next {
+  right: -22px;
+}
+
+/* ==========================================================================
+   FLOATING BOTTOM CONTROLS (MATCHING IMAGE 1)
+   ========================================================================== */
+.notebook-bottom-bar {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 40;
+}
+
+.floating-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(22, 28, 42, 0.85);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.pill-action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.pill-action-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(1.08);
+}
+
+.pill-action-btn:active {
+  transform: scale(0.92);
+}
+
+/* Close book button (folds book back onto desk) */
+.close-notebook-btn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(22, 28, 42, 0.85);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  color: #E2E8F0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.close-notebook-btn:hover {
+  background: rgba(35, 45, 68, 0.95);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Fullscreen icon button (bottom right of Image 1) */
+.fullscreen-btn {
+  position: absolute;
+  right: 28px;
+  bottom: 22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: rgba(22, 28, 42, 0.75);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 40;
+}
+
+.fullscreen-btn:hover {
+  background: rgba(35, 45, 68, 0.95);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: scale(1.06);
+}
+
+/* Page flip transition effect */
+.page-turning .page-right,
+.page-turning .page-left {
+  animation: page-flip-pulse 0.45s ease-in-out;
+}
+
+@keyframes page-flip-pulse {
+  0% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+  50% {
+    filter: brightness(0.92);
+    transform: scale(0.985);
+  }
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+}
+
+/* Toast message for feedback */
+.toast-msg {
+  position: fixed;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(15, 20, 30, 0.92);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 1000;
+}
+
+.toast-msg.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 820px) {
+  .notebook-spread {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .notebook-crease {
+    width: 100%;
+    height: 24px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0.18) 0%,
+      rgba(0, 0, 0, 0.04) 50%,
+      rgba(0, 0, 0, 0.18) 100%
+    );
+  }
+
+  .page-left {
+    min-height: 240px;
+    flex: none;
+    height: 44%;
+  }
+
+  .page-right {
+    flex: 1;
+    padding: 20px 22px;
+  }
+
+  .handwritten-content {
+    font-size: 1.25rem;
+  }
+
+  .depth-page-left-1,
+  .depth-page-left-2,
+  .depth-page-right-1,
+  .depth-page-right-2 {
+    display: none;
+  }
+
+  .page-turn-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .btn-prev {
+    left: 4px;
+  }
+
+  .btn-next {
+    right: 4px;
+  }
+
+  .fullscreen-btn {
+    display: none;
+  }
+}
